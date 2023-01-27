@@ -20,6 +20,33 @@ class Sorting {
         }
     }
 
+    bubbleSort2 = () => {
+        let stopIndex = this.array.length - 1;
+        let isSorted, lastSwap;
+        let numSwaps = 0;
+        let numComp = 0;
+        while (stopIndex > 0) {
+            let i = 0;
+            isSorted = true;
+            while (i < stopIndex) {
+                if (this.array[i] > this.array[i + 1]) {
+                    this.#swap(i, i + 1)
+                    isSorted = false;
+                    lastSwap = i;
+                    numSwaps++;
+                }
+                numComp++;
+                i++;
+            }
+            numComp++;
+            stopIndex = lastSwap;
+            if (isSorted) {
+                console.log(this.array, numComp, numSwaps);
+                return;
+            }
+        }
+    }
+
     #swap(index1, index2) {
         let temp = this.array[index1];
         this.array[index1] = this.array[index2];
@@ -51,7 +78,48 @@ class Sorting {
         }
         console.log(this.array);
     }
+
+    mergeSort = (array = this.array) => {
+        if (array.length < 2) {
+            return array;
+        }
+        let length = array.length;
+        let midIndex = Math.floor(length / 2);
+        let left = [];
+        for (let i = 0; i < midIndex; i++) {
+            left[i] = array[i];
+        }
+        let right = [];
+        for (let j = midIndex; j < length; j++) {
+            right[j - midIndex] = array[j];
+        }
+        // console.log(`length: ${length} | midIndex: ${midIndex} | left: ${left} | right: ${right}`);
+        this.mergeSort(left);
+        this.mergeSort(right);
+
+        this.#merge(left, right, array);
+        console.log(`answer: ${array}`);
+    }
+
+    #merge(left, right, result) {
+        // i = left pointer | j = right pointer | k = result pointer
+        let i = 0, j = 0, k = 0;
+
+        while (i < left.length && j < right.length) {
+            if (left[i] <= right[j]) {
+                result[k++] = left[i++];
+            } else {
+                result[k++] = right[j++];
+            }
+        }
+        while (i < left.length) {
+            result[k++] = left[i++];
+        }
+        while (j < right.length) {
+            result[k++] = right[j++];
+        }
+    }
 }
 
-var test = new Sorting([3,2,4,1,7,9,3]);
-test.bubbleSort();
+var test = new Sorting([4, 3, 1, 5, 2, 6, 7]);
+test.mergeSort();
